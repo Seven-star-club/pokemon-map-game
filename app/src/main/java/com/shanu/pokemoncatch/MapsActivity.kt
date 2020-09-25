@@ -1,6 +1,8 @@
 package com.shanu.pokemoncatch
 
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -90,5 +92,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet(" pika pika ")
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu)))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu,14f))
+    }
+
+    // Get use location
+    inner class MyLocationListener:LocationListener{
+        var location:Location?=null
+        constructor(){
+            location = Location("Start")
+            location!!.latitude = 0.0
+            location!!.longitude = 0.0
+
+
+        }
+        override fun onLocationChanged(location: Location) {
+            this.location = location
+            TODO("Not yet implemented")
+        }
+
     }
 }
