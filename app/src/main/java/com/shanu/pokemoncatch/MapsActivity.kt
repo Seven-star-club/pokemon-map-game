@@ -51,6 +51,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Will do it soon
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(requestCode){
+            ACCESSLOCATION ->{
+                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    getUserLocation()
+                }else{
+                    Toast.makeText(this
+                        ,"Location access was not granted",Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
