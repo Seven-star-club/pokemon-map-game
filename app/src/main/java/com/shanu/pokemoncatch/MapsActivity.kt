@@ -1,7 +1,11 @@
 package com.shanu.pokemoncatch
 
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,6 +27,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        checkPermission()
+    }
+    var ACCESSLOCATION = 123
+    fun checkPermission(){
+        if(Build.VERSION.SDK_INT >= 23){
+            if(ActivityCompat
+                    .checkSelfPermission(this,android.Manifest.permission
+                        .ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+                requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    ,ACCESSLOCATION)
+                return
+            }
+
+        }
+        getUserLocation()
+    }
+
+    fun getUserLocation(){
+
+        Toast.makeText(this,"Location access is granted",Toast.LENGTH_SHORT).show()
+        // Will do it soon
     }
 
     /**
@@ -38,11 +64,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney)
+        val pikachu = LatLng(-34.0, 151.0)
+        mMap.addMarker(MarkerOptions().position(pikachu)
             .title("Me")
             .snippet(" pika pika ")
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu)))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,14f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu,14f))
     }
 }
