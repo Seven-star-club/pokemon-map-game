@@ -1,6 +1,5 @@
 package com.shanu.pokemoncatch
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -34,6 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         checkPermission()
+        loadPokemon()
     }
     var ACCESSLOCATION = 123
     fun checkPermission(){
@@ -50,7 +50,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getUserLocation()
     }
 
-    @SuppressLint("MissingPermission")
     fun getUserLocation(){
 
         Toast.makeText(this,"Location access is granted",Toast.LENGTH_SHORT).show()
@@ -140,13 +139,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun run(){
             while(true){
                 try{
-                    val pikachu = LatLng(location!!.latitude, location!!.longitude)
-                    mMap.addMarker(
-                        MarkerOptions().position(pikachu)
-                            .title("Me")
-                            .snippet("I am pikachu.Electric Type Pokemon")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
-                    )
 
                     if(oldLocation!!.distanceTo(location)==0f){
                         continue
@@ -156,12 +148,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         mMap.clear()
 
                         // Show my player
-
+                        val pikachu = LatLng(location!!.latitude, location!!.longitude)
+                        mMap.addMarker(
+                            MarkerOptions().position(pikachu)
+                                .title("Me")
+                                .snippet(" pika pika ")
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
+                        )
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu, 10f))
 
                         // Show others
 
-                        for(i in 0..listPokemon.size){
+                        for(i in 0 until listPokemon.size){
                             var new = listPokemon[i]
                             if(new.isCatched == false){
                                 val addedPokemon = LatLng(new.latitude!!, new.longitude!!)
@@ -185,16 +183,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    var listPokemon = arrayListOf<Pokemon>()
+    var listPokemon = ArrayList<Pokemon>()
 
     fun loadPokemon(){
         listPokemon.add(
             Pokemon("Charmander","A fire type pokemon"
-        ,R.drawable.charmander,55.0,37.33,-22.0)
+        ,R.drawable.charmander,55.0,0.0,0.0)
         )
         listPokemon.add(Pokemon("Bulbasaur","A grass type pokemon"
-            ,R.drawable.bulbasaur,67.0,37.33,22.0))
+            ,R.drawable.bulbasaur,67.0,1.0,1.0))
         listPokemon.add(Pokemon("Squirtle","A water type pokemon"
-            ,R.drawable.squirtle,72.0,37.33,-22.0))
+            ,R.drawable.squirtle,72.0,1.0,2.0))
     }
 }
