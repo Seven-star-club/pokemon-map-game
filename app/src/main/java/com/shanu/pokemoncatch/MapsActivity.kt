@@ -134,6 +134,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 try{
                     runOnUiThread {
                         mMap.clear()
+
+                        // Show my player
                         val pikachu = LatLng(location!!.latitude, location!!.longitude)
                         mMap.addMarker(
                             MarkerOptions().position(pikachu)
@@ -142,6 +144,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
                         )
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu, 14f))
+
+                        // Show others
+
+                        for(i in 0..listPokemon.size){
+                            var new = listPokemon[i]
+                            if(new.isCatched == false){
+                                val addedPokemon = LatLng(new.latitude!!, new.longitude!!)
+                                mMap.addMarker(
+                                    MarkerOptions().position(addedPokemon)
+                                        .title(new.name!!)
+                                        .snippet(new.des!!)
+                                        .icon(BitmapDescriptorFactory.fromResource(new.image!!))
+                                )
+
+                            }
+
+
+                        }
                     }
                     Thread.sleep(1000)
 
@@ -150,5 +170,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }catch (ex:Exception){}
             }
         }
+    }
+    var listPokemon = arrayListOf<Pokemon>()
+
+    fun loadPokemon(){
+        listPokemon.add(
+            Pokemon("Charmander","A fire type pokemon"
+        ,R.drawable.charmander,55.0,37.33,-122.0)
+        )
+        listPokemon.add(Pokemon("Bulbasaur","A grass type pokemon"
+            ,R.drawable.bulbasaur,67.0,137.33,122.0))
+        listPokemon.add(Pokemon("Squirtle","A water type pokemon"
+            ,R.drawable.squirtle,72.0,137.33,-122.0))
     }
 }
