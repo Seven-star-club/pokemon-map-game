@@ -1,8 +1,10 @@
 package com.shanu.pokemoncatch
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -50,7 +52,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun getUserLocation(){
 
         Toast.makeText(this,"Location access is granted",Toast.LENGTH_SHORT).show()
+        var myLocation = MylocationListener()
+        var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3,3f,myLocation)
         // Will do it soon
+        var mythread = myThread()
+        mythread.start()
     }
 
     override fun onRequestPermissionsResult(
@@ -86,17 +93,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val pikachu = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(pikachu)
-            .title("Me")
-            .snippet(" pika pika ")
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu)))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu,14f))
-    }
 
+    }
+    var location:Location?=null
     // Get use location
-    inner class MyLocationListener:LocationListener{
-        var location:Location?=null
+    inner class MylocationListener:LocationListener{
         constructor(){
             location = Location("Start")
             location!!.latitude = 0.0
@@ -104,10 +105,50 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         }
-        override fun onLocationChanged(location: Location) {
-            this.location = location
-            TODO("Not yet implemented")
+        override fun onLocationChanged(p0: Location) {
+            location = p0
+            //TODO("Not yet implemented")
+
+        }
+        override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
+        override fun onProviderEnabled(provider: String) {
+            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
+    inner class myThread:Thread{
+        constructor():super(){
+
+
+        }
+
+        override fun run(){
+            while(true){
+                try{
+                    runOnUiThread {
+                        mMap.clear()
+                        val pikachu = LatLng(location!!.latitude, location!!.longitude)
+                        mMap.addMarker(
+                            MarkerOptions().position(pikachu)
+                                .title("Me")
+                                .snippet(" pika pika ")
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
+                        )
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu, 14f))
+                    }
+                    Thread.sleep(1000)
+
+
+
+                }catch (ex:Exception){}
+            }
+        }
     }
 }
