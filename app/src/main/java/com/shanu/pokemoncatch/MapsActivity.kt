@@ -1,5 +1,6 @@
 package com.shanu.pokemoncatch
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -49,12 +50,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getUserLocation()
     }
 
+    @SuppressLint("MissingPermission")
     fun getUserLocation(){
 
         Toast.makeText(this,"Location access is granted",Toast.LENGTH_SHORT).show()
         var myLocation = MylocationListener()
         var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3,3f,myLocation)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3
+            ,3f,myLocation)
         // Will do it soon
         var mythread = myThread()
         mythread.start()
@@ -123,8 +126,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    var oldLocation:Location?=null
     inner class myThread:Thread{
         constructor():super(){
+            oldLocation = Location("Start")
+            oldLocation!!.latitude = 0.0
+            oldLocation!!.longitude = 0.0
+
 
 
         }
@@ -132,18 +140,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun run(){
             while(true){
                 try{
+                    val pikachu = LatLng(location!!.latitude, location!!.longitude)
+                    mMap.addMarker(
+                        MarkerOptions().position(pikachu)
+                            .title("Me")
+                            .snippet("I am pikachu.Electric Type Pokemon")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
+                    )
+
+                    if(oldLocation!!.distanceTo(location)==0f){
+                        continue
+                    }
+                    oldLocation = location
                     runOnUiThread {
                         mMap.clear()
 
                         // Show my player
-                        val pikachu = LatLng(location!!.latitude, location!!.longitude)
-                        mMap.addMarker(
-                            MarkerOptions().position(pikachu)
-                                .title("Me")
-                                .snippet(" pika pika ")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pikachu))
-                        )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu, 14f))
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pikachu, 10f))
 
                         // Show others
 
@@ -176,11 +190,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun loadPokemon(){
         listPokemon.add(
             Pokemon("Charmander","A fire type pokemon"
-        ,R.drawable.charmander,55.0,37.33,-122.0)
+        ,R.drawable.charmander,55.0,37.33,-22.0)
         )
         listPokemon.add(Pokemon("Bulbasaur","A grass type pokemon"
-            ,R.drawable.bulbasaur,67.0,137.33,122.0))
+            ,R.drawable.bulbasaur,67.0,37.33,22.0))
         listPokemon.add(Pokemon("Squirtle","A water type pokemon"
-            ,R.drawable.squirtle,72.0,137.33,-122.0))
+            ,R.drawable.squirtle,72.0,37.33,-22.0))
     }
 }
