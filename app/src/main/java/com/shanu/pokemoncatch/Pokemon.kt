@@ -1,12 +1,13 @@
 package com.shanu.pokemoncatch
 
+import android.location.Location
+
 class Pokemon {
     var name:String?=null
     var des:String?=null
     var image:Int?=null
     var power:Double?=null
-    var latitude:Double?=null
-    var longitude:Double?=null
+    var location:Location?=null
     var isCatched:Boolean?=false
 
 
@@ -15,8 +16,9 @@ class Pokemon {
         this.des = des
         this.image = image
         this.power = power
-        this.latitude = latitude
-        this.longitude = longitude
+        this.location = Location(name)
+        this.location!!.latitude = latitude
+        this.location!!.longitude = longitude
         this.isCatched = false
 
     }

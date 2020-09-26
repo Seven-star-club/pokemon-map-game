@@ -162,7 +162,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         for(i in 0 until listPokemon.size){
                             var new = listPokemon[i]
                             if(new.isCatched == false){
-                                val addedPokemon = LatLng(new.latitude!!, new.longitude!!)
+                                val addedPokemon = LatLng(new.location!!.latitude, new.location!!.longitude)
                                 mMap.addMarker(
                                     MarkerOptions().position(addedPokemon)
                                         .title(new.name!!)
