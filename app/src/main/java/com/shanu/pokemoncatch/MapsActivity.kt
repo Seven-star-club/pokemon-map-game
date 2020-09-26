@@ -166,9 +166,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 mMap.addMarker(
                                     MarkerOptions().position(addedPokemon)
                                         .title(new.name!!)
-                                        .snippet(new.des!!)
+                                        .snippet(new.des!! + " Power: "+new.power!!)
                                         .icon(BitmapDescriptorFactory.fromResource(new.image!!))
                                 )
+
+                            }
+                            if(location!!.distanceTo(new.location)<2f){
+                                new.isCatched = true
+                                listPokemon[i] = new
+                                playerPower += new.power!!
+                                Toast.makeText(applicationContext,"You caught a new pokemon"
+                                    ,Toast.LENGTH_LONG).show()
 
                             }
 
@@ -184,7 +192,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
     var listPokemon = ArrayList<Pokemon>()
-
+    var playerPower:Double = 0.0
     fun loadPokemon(){
         listPokemon.add(
             Pokemon("Charmander","A fire type pokemon"
